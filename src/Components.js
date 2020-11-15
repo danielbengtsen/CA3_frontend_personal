@@ -54,6 +54,11 @@ export function Home() {
 
                     </ul>
             </div>
+
+            <div>
+                <h5>Personal description:</h5>
+                <p>I used the startcode by adding the new endpoint link to "Settings.js". Then I added the fetch function to "apiFacade.js". Then I added the functionality to "Components.js". In the end, I added the navbar and link to "App.js" and the new functionality was implemented.</p>
+            </div>
         </div>
     );
 }
@@ -75,7 +80,7 @@ export function Login({ login }) {
             <h2>Login here</h2>
             <form onChange={onChange}>
                 <input placeholder="Username" id="username" />
-                <input placeholder="Password" id="password" />
+                <input placeholder="Password" type="password" id="password" />
                 <button onClick={performLogin}>Login</button>
             </form>
         </div>
