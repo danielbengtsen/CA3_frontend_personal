@@ -234,35 +234,65 @@ export function Address() {
           const temp = data.weather.data[0];
           setServicePoints(data.postnord.servicePointInformationResponse.servicePoints);
           setWeather({
-            Sunrise: temp.sunrise,
+            Sunrise: data.sunrise,
             Sunset: temp.sunset,
             Datetime: temp.datetime,
             Cityname: temp.city_name,
             Temperature: temp.temp,
             ApparentTemperature: temp.app_temp,
             Description: temp.weather.description
-          })
+          });
         })
       };
 
       return (
           <div>
             <AddressInfo isBlocking={isBlocking} handleChange={handleChange} handleSubmit={handleSubmit} servicePoints={servicePoints} />
+            <hr></hr>
             <WeatherInfo weather={weather} />
           </div>
       )
 }
 
-export function AddressInfo({isBlocking, handleChange, handleSubmit, servicePoints }) {
-    
+export function SportPredictionOdds()
+{
+    const [sportPredictions, setSportPredictions] = useState([]);
 
-    const allServicePoints = servicePoints.map(servicePoint => (
-        <ul key={servicePoint.servicePointId}>
-            <li>{servicePoint.servicePointId}</li>
-            <li>{servicePoint.name}</li>
-        </ul>
-        )
+    const handleSubmit = event => {
+        event.preventDefault();
+        apiFacade.getSportPredictions()
+        .then(data => {
+          setSportPredictions(data.data);
+        })
+    };
+
+    return (
+        <div>
+            <div>
+                <h2>Sport Predictions</h2>
+            </div>
+            <div>
+                <button onClick={handleSubmit}>Show me the predictions!</button>
+            </div>
+            <hr></hr>
+            <div>
+            <SportInfo sportPredictions={ sportPredictions } />
+            </div>
+        </div>
     );
+}
+
+export function AddressInfo({isBlocking, handleChange, handleSubmit, servicePoints }) {
+
+    const allServicePoints = servicePoints.map((servicePoint, index) => (
+        <div>
+            <h5>Pakkeboks: {index+1}</h5>
+            <ul key={servicePoint.servicePointId}>
+                <li>{servicePoint.servicePointId}</li>
+                <li>{servicePoint.name}</li>
+            </ul>
+        </div>
+    ));
 
     return (
         <div>
@@ -281,7 +311,10 @@ export function AddressInfo({isBlocking, handleChange, handleSubmit, servicePoin
                     <input type="submit" value="Enter" onClick={handleSubmit} />
                 </form>
             </div>
-            {allServicePoints}
+            <hr></hr>
+            <div>
+                {allServicePoints}
+            </div>
         </div>
     );
 }
@@ -289,10 +322,66 @@ export function AddressInfo({isBlocking, handleChange, handleSubmit, servicePoin
 export function WeatherInfo({ weather }) {
     return (
         <div>
-            <h2>Weather goes here</h2>
+            <h2>Weather at the given address</h2>
             <Log value={weather} />
         </div>
     )
+}
+
+export function SportInfo({ sportPredictions })
+{
+    function isExpired(string)
+    {
+        if(string == false)
+        {
+            return "No";
+        } else if(string == true)
+        {
+            return "Yes";
+        } else
+        {
+            return "unknown";
+        }
+    }
+
+    function hasResult(string)
+    {
+        if(string === "")
+        {
+            return "No result yet"
+        }
+    }
+
+    const allSportPredictions = sportPredictions.map(sportPrediction => (
+        <div>
+            <h5>Odds id: {sportPrediction.id}</h5>
+            <ul key={sportPrediction.id}>
+                <li>Home Team: {sportPrediction.home_team}</li>
+                <li>Away Team: {sportPrediction.away_team}</li>
+                <li>Competition: {sportPrediction.competition_name}</li>
+                <li>Prediction: {sportPrediction.prediction}</li>
+                <li>Status: {sportPrediction.status}</li>
+                <li>Expired: {isExpired(sportPrediction.is_expired)}</li>
+                <li>Result: {hasResult(sportPrediction.result)}</li>
+                <li>Start date: {sportPrediction.start_date}</li>
+                <li>Last updated: {sportPrediction.last_update_at}</li>
+                <ul>
+                    <li>1: {sportPrediction.odds['1']}</li>
+                    <li>X: {sportPrediction.odds['X']}</li>
+                    <li>2: {sportPrediction.odds['2']}</li>
+                    <li>1X: {sportPrediction.odds['1X']}</li>
+                    <li>X2: {sportPrediction.odds['X2']}</li>
+                    <li>12: {sportPrediction.odds['12']}</li>
+                </ul>
+            </ul>
+        </div>
+        )
+    );
+    return(
+        <div>
+            {allSportPredictions}
+        </div>
+    );
 }
 
 const Log = ({ value, replacer = null, space = 2 }) => (

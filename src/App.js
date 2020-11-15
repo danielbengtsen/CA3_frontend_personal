@@ -17,7 +17,8 @@ import {
   LoggedIn,
   Address,
   Movies,
-  DigitalOcean
+  DigitalOcean,
+  SportPredictionOdds
 } from './Components';
 import apiFacade from './apiFacade';
 
@@ -59,6 +60,9 @@ function App() {
           <Route path="/address-info">
            <Address />
           </Route>
+          <Route path="/sport-predictions">
+           <SportPredictionOdds />
+          </Route>
           <Route path="/movie-reviews">
            <Movies />
           </Route>
@@ -93,6 +97,7 @@ function Header({ isLoggedIn, loginMsg }) {
         (
           <React.Fragment>
             <li><NavLink activeClassName="active" to="/movie-reviews">Movies</NavLink></li>
+            <li><NavLink activeClassName="active" to="/sport-predictions">Sport Predictions</NavLink></li>
             <li><NavLink activeClassName="active" to="/digitalocean-info">Digital Ocean Info</NavLink></li>
           </React.Fragment>
         )

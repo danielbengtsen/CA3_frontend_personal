@@ -1,4 +1,4 @@
-import URLS, {servicepointsURL, movieReviewURL, digitaloceanURL, loginURL} from './Settings';
+import URLS, {servicepointsURL, movieReviewURL, digitaloceanURL, loginURL, sportURL} from './Settings';
 
 function getServicePoints(address) {
     const options = makeOptions("POST", true, address);
@@ -16,6 +16,13 @@ function getMovieReviews(query) {
 function getDigitalOceanInfo() {
     const options = makeOptions("GET", true);
     return fetch (digitaloceanURL, options)
+    .then(handleHttpErrors);
+}
+
+function getSportPredictions()
+{
+    const options = makeOptions("GET", true);
+    return fetch(sportURL, options)
     .then(handleHttpErrors);
 }
 
@@ -44,6 +51,7 @@ const apiFacade = {
     getServicePoints,
     getMovieReviews,
     getDigitalOceanInfo,
+    getSportPredictions,
     setToken,
     getToken,
     loggedIn,
